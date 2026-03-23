@@ -1,34 +1,37 @@
-import loginModel from "../models/login.model.js";
 import bcrypt from "bcrypt"
+import signupModel from "../models/signup.model.js";
 
 export const loginController = async (req, res) => {
  const {userId, password} = req.body;
  try{
     if (!userId || !password){
-        res.status(400).send({
+        return res.status(400).send({
             message:"UserId or paassword is a required field"
         })
     }
 
-    const userInDb = loginModel.findOne(userId);
+    const userInDb = await signupModel.findOne({userId});
+
+
 
     if (!userInDb){
-        res.status(404).send({
+        return res.status(404).send({
             message: "User does not exist"
         })
     }
+    console.log(userInDb)
     const passwordFromDb = userInDb.password
-    const passwordMatch = bcrypt.compare(password, passwordFromDb);
+    const passwordMatch = await bcrypt.compare(password, passwordFromDb);
 
     if (!passwordMatch){
-        res.status(401).send({
+        return res.status(401).send({
             message: "UserID or Password does not match"
         })
     }
 
-    res.status(200).send({
+    return res.status(200).send({
         status: "success",
-        message: "Login Successfu;"
+        message: "Login Successful"
     })
 
  }

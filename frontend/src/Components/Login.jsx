@@ -6,16 +6,18 @@ const Login = () => {
 
     const [userName, setUserName] = useState("")
     const [password, setPassword] = useState("")
+    const [loginMessage, setLoginMessage] = useState("")
 
     const onSubmit = async () =>{
-        const loginCreds = {
-            userName,
-            password
-        }
-        const apiCall = await axios.post("/", {
-            loginCreds
+        
+        const apiCall = await axios.post("http://localhost:8000/api/v1/login", {
+            userId: userName,
+            password: password
         })
+        console.log(apiCall)
         const res = await apiCall.data;
+
+        setLoginMessage(res.message)
     }
  
   return (
@@ -29,6 +31,8 @@ const Login = () => {
             <input onChange={(e)=> setPassword(e.target.value)} type='password' placeholder='password'/>
         </div>
         <button onClick={onSubmit}>Submit</button>
+
+        <div>{loginMessage}</div>
     </div>
   )
 }
