@@ -1,0 +1,4 @@
+.flex-view-main{
+    display: flex;
+    flex-wrap: wrap;
+}

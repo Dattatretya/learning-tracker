@@ -1,0 +1,44 @@
+.login-card{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  width: 400px;
+  background: linear-gradient(120deg ,skyblue, white);
+  color: black;
+  border-radius: 10px;
+  border: 3px solid skyblue
+}
+
+.username{
+    padding: 10px;
+    margin-right: 10vh;
+    margin-bottom: 2vh;
+
+}
+
+.password{
+    padding: 10px;
+    margin-left: 10vh;
+    margin-top: 2vh;
+
+}
+
+.login-label{
+    margin: 4px;
+}
+
+.submit{
+    background-color: cyan;
+    border: none;
+    width: 90%;
+    height: 3vh;
+    margin-top: 16vh;
+    border-radius: 10px;
+}
+
+.submit:hover{
+    background-color: black;
+    color: wheat;
+}
