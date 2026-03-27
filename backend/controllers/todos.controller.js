@@ -1,10 +1,13 @@
-import todoModel from "../models/todos.model"
+import todoModel from "../models/todos.model.js"
 
 
-export const todoController =async (req, res) => {
+export const setTodoController = async (req, res) => {
+
+    const {title, description} = req.body
+
     try{
 
-        const {title, description} = req.body
+        console.log("body", title, description)
 
         if (!title){
             return res.status(404).send({
@@ -12,24 +15,70 @@ export const todoController =async (req, res) => {
             })
         }
 
-        if (!description){
-            description = ""
-        }
 
         const todo = await todoModel({title: title, description: description})
 
-        await todo.save()
+        const response = await todo.save()
 
-        return res.status(200).send({
+        if (response._id){
+            return res.status(200).send({
             status: "success",
             message: "Todo saved successfully"
         })
+        }
+        else{
+            return res.status(402).send({
+            status: "failed",
+            message: "Internal server error"
+        })
+        }
+
+        
+
+    }
+    catch(err){
+        return res.status(500).send({
+            message:"Internal server error",
+            error: err
+        })
+    }
+}
+
+export const getTodosController = async (req, res) => {
+    try{
+
+        const todos =await  todoModel.find()
+
+        if (!todos){
+            return res.status(404).send({
+                message: "No todos found"
+            })
+        }
+
+        return res.status(200).send({
+            status: "success",
+            todos,
+            message: "Todos successfully fetched"
+        })
+    }
+    catch(err){
+        return res.status(500).send({
+            message: "Internal server error"
+        })
+    }
+}
+
+export const deleteTodosController = async (req, res) => {
+    try{
+
+        const {ids} = req.body
+        const deleteTodo = await todoModel.deleteMany({status: "Delete"})
 
     }
     catch(err){
         res.status(500).send({
-            message:"Internal server error"
+            message: "Internal server error",
+            error: err
         })
-        console.log(err)
     }
 }

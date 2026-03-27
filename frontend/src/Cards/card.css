@@ -1,5 +1,5 @@
 .flex-view{
- flex: 0 0 45%;
+ flex: 0 0 100%;
  margin: 20px;
  background-color: black;
  color: white;
@@ -11,7 +11,12 @@
 .column-view{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-evenly;
+}
+
+.one-column{
+    display: flex;
+    flex-direction: column;
 }
 
 input[type="checkbox"]:checked + label {
