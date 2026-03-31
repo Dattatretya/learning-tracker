@@ -72,7 +72,21 @@ export const deleteTodosController = async (req, res) => {
     try{
 
         const {ids} = req.body
-        const deleteTodo = await todoModel.deleteMany({status: "Delete"})
+
+        if (!ids){
+            return res.status(400).send({
+                message: "No ids found to delete"
+            })
+        }
+
+        const deleteTodo = await todoModel.deleteMany({_id: {$in: ids}})
+
+        console.log(deleteTodo)
+
+        return res.status(200).send({
+            status: "success",
+            message: "Selected todos deleted"
+        })
 
     }
     catch(err){

@@ -8,6 +8,8 @@ const Todo = () => {
     const [showInput, setShowInput] = useState(false)
     const [todoInput, setTodoInput] = useState("")
     const [todosList, setTodosList] = useState([])
+    const [todoId, setTodoId] = useState([])
+    const [reRender, setReRender] = useState(false)
 
     const addTodo = () => {
         setShowInput(true)
@@ -26,23 +28,33 @@ const Todo = () => {
         })
         const res = await sendTodo.data;
         console.log(res)
+
+        setReRender(!reRender)
     }
 
      const deleteTodo = async () => {
-        const res = await axios.delete("http://localhost:8000/api/v1/gettodo", {
-
+        console.log("todo deleted")
+        console.log(todoId)
+        const res = await axios.delete("http://localhost:8000/api/v1/deletetodo", {
+            data:{ids: todoId}
         })
-     }
+
+        const deleted = res.data
+        console.log(deleted)
+        if (deleted.status === "success"){
+            setReRender(!reRender)
+        }
+
+        }
 
      const fetchTodos = async ()=>{
         try{
             console.log("get called")
-        const res = await axios.get("http://localhost:8000/api/v1/gettodo", {
-            ids: todo._id
-        });
+        const res = await axios.get("http://localhost:8000/api/v1/gettodo");
         const todo = res.data;
         console.log(todo)
         setTodosList(todo.todos)
+        
         }
         catch(err){
             setTodos([])
@@ -51,14 +63,14 @@ const Todo = () => {
 
     useEffect(()=>{
        fetchTodos()
-    },[])
+    },[reRender])
 
   return (
     <div className='flex-view'>
         <div className="column-view">
             {todosList.map((todo)=>(
             <div key={todo._id} className="one-column">
-                <input type="checkbox"/>
+                <input type="checkbox" onClick={()=>setTodoId([...todoId, todo._id])}/>
                 <p>{todo.title || todo}</p>
             </div>
             ))}
