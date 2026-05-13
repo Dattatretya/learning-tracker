@@ -16,9 +16,23 @@
 
 .one-column{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
 }
 
 input[type="checkbox"]:checked + label {
     text-decoration: line-through;
+}
+
+.todos-list{
+    display: flex;
+    flex-direction: column;
+}
+
+.todo-checkbox{
+    display: block;
+}
+
+.add-input{
+    display: flex;
+    flex-direction: column;
 }

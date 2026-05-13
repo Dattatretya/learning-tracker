@@ -10,19 +10,16 @@ const Todo = () => {
     const [todosList, setTodosList] = useState([])
     const [todoId, setTodoId] = useState([])
     const [reRender, setReRender] = useState(false)
+    const [editTitle, setEditTitle] = useState(false)
+    const [editedTitle, setEditedTitle] = useState("")
 
     const addTodo = () => {
         setShowInput(true)
     }
 
-    const removeInput = (e) => {
-        e.stopPropagation();
-        setShowInput(false);
-    }
-
     const submitTodo =async () => {
         console.log(todoInput)
-        const sendTodo = await axios.post("http://localhost:8000/api/v1/addtodo", {
+        const sendTodo = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/addtodo`, {
             title: todoInput,
             description: ""
         })
@@ -35,7 +32,7 @@ const Todo = () => {
      const deleteTodo = async () => {
         console.log("todo deleted")
         console.log(todoId)
-        const res = await axios.delete("http://localhost:8000/api/v1/deletetodo", {
+        const res = await axios.delete(`${import.meta.env.VITE_API_URL}/api/v1/deletetodo`, {
             data:{ids: todoId}
         })
 
@@ -46,11 +43,33 @@ const Todo = () => {
         }
 
         }
+    
+    const editTodo = async () => {
+
+        console.log(editedTitle)
+        console.log(todoId)
+
+        if (todoId.length > 1){
+            return <div> Please dont select more than one to edit</div>
+        }
+        
+        const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/v1/edittodo`, { 
+            
+                id: todoId,
+                title: editedTitle
+
+        })
+        setReRender(!reRender)
+    }
+
+    const addRemoveTodo = (todo) => {
+        setTodoId(prev => prev.includes(todo._id)? prev.filter(id => id != todo._id): [...prev, todo._id])
+    }
 
      const fetchTodos = async ()=>{
         try{
             console.log("get called")
-        const res = await axios.get("http://localhost:8000/api/v1/gettodo");
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/gettodo`);
         const todo = res.data;
         console.log(todo)
         setTodosList(todo.todos)
@@ -68,25 +87,40 @@ const Todo = () => {
   return (
     <div className='flex-view'>
         <div className="column-view">
+            <div className="todos-list">
             {todosList.map((todo)=>(
             <div key={todo._id} className="one-column">
-                <input type="checkbox" onClick={()=>setTodoId([...todoId, todo._id])}/>
-                <p>{todo.title || todo}</p>
+                <input className="todo-checkbox" type="checkbox" onClick={()=>addRemoveTodo(todo)}/>
+                <span>{todo.title || todo}</span>
             </div>
+            
             ))}
-            <div className="" onClick={addTodo}>
-                <p> (+) </p>
+            <div style={{marginTop: "20px"}}>
+                <button onClick={deleteTodo}>Delete</button>
+            </div>
+            <div style={{marginTop: "20px"}}>
+                <button onClick={()=>setEditTitle(!editTitle)}>Edit</button>
+            </div>
+            </div>
+            <div className="add-input" >
+                {showInput ? <p onClick={()=>setShowInput(!showInput)}>(-)</p>:<p onClick={()=>setShowInput(!showInput)}>(+)</p>}
                 {showInput && 
                 <div>
                 <input onChange={(e)=> setTodoInput(e.target.value)}/>
-                <button onClick={submitTodo}>Add</button>
-                <p onClick={removeInput}>Nayy</p>
+                <button style={{display:"block", marginTop:"4px"}} onClick={submitTodo}>Add</button>
                 </div>
                  }
             </div>
+            
+
+            {editTitle && 
             <div>
-                <button onClick={deleteTodo}>Delete</button>
+                <input placeholder="click single todo to edit" onChange={(e)=> setEditedTitle(e.target.value)}/>
+                <button onClick={editTodo}>Enter</button>
             </div>
+                }
+
+            
 
         </div>
     </div>

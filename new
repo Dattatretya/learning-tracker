@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Pull Latest Code') {
+            steps {
+                sh '''
+                cd /opt/learning-tracker
+                git pull origin main
+                '''
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                cd /opt/learning-tracker/backend
+                npm ci
+                '''
+            }
+        }
+
+        stage('Restart Backend') {
+            steps {
+                sh '''
+                cd /opt/learning-tracker/backend
+
+                /usr/local/bin/pm2 delete backend || true
+                /usr/local/bin/pm2 start index.js --name backend
+                /usr/local/bin/pm2 save
+                '''
+            }
+        }
+    }
+}

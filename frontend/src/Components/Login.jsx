@@ -13,7 +13,7 @@ const Login = () => {
 
     const onSubmit = async () =>{
         
-        const apiCall = await axios.post("http://localhost:8000/api/v1/login", {
+        const apiCall = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/login`, {
             userId: userName,
             password: password
         })
