@@ -31,5 +31,5 @@ app.use("/api/v1", todo)
 
 app.listen(process.env.PORT, ()=>{
     console.log(`Listening to ${process.env.PORT}`)
-    mongoose.connect("mongodb://localhost:27017/learning-tracker")
-})
+    mongoose.connect(process.env.MONGO_URI)
+})   

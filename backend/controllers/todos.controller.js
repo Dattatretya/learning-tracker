@@ -96,3 +96,44 @@ export const deleteTodosController = async (req, res) => {
         })
     }
 }
+
+export const editTodo = async (req, res) => {
+    try{
+        const {id, title} = req.body;
+
+        console.log(req.body)
+
+        if (!id || !title){
+            return res.status(400).send({
+                message: "Id and title are required fields"
+            })
+        }
+
+        const idExist = await todoModel.findById({_id:id})
+
+        if (!idExist){
+            return res.status(404).send({
+                message: "Id doesnot exist"
+            })
+        }
+
+        const edit = await todoModel.updateOne({_id: id}, {title: title})
+
+        console.log(edit)
+
+        if (edit.acknowledged){
+            return res.status(200).send({
+            status: "success",
+            message: "Edited successfully"
+        })
+        }
+
+
+    }
+    catch(err){
+        return res.status(500).send({
+            message: "Internal server error",
+            error: err
+        })
+    }
+}
