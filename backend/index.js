@@ -31,6 +31,6 @@ app.use("/api/v1", todo)
 
 //using process.env just a small change
 app.listen(process.env.PORT, ()=>{
-    console.log(`Listening to ${process.env.PORT}`)
+    console.log(`Listening to ${process.env.PORT} for a while`)
     mongoose.connect(process.env.MONGO_URI)
 })   
